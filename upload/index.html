@@ -10,16 +10,17 @@
 
   <style>
     :root {
-      --ink:       #1a1714;
-      --parchment: #f7f3ee;
-      --warm:      #e8dfd4;
-      --accent:    #8b3a2a;
-      --accent-lt: #c4624e;
-      --danger:    #b52b2b;
-      --danger-lt: #fdf0f0;
-      --rule:      rgba(26,23,20,.12);
-      --green:     #1e6e3a;
-      --green-lt:  #f0faf4;
+      --ink:       #fdfdfd;
+      --bg:        #020202;
+      --surface:   #0f0f0f;
+      --surface2:  #181818;
+      --accent:    #cc3399;
+      --accent-lt: #e055b3;
+      --danger:    #e05555;
+      --danger-lt: rgba(224,85,85,.12);
+      --rule:      rgba(253,253,253,.09);
+      --green:     #4caf7d;
+      --green-lt:  rgba(76,175,125,.1);
       --radius:    6px;
       --serif:     'Cormorant Garamond', Georgia, serif;
       --sans:      'DM Sans', system-ui, sans-serif;
@@ -30,7 +31,7 @@
     html { font-size: 16px; }
     body {
       font-family: var(--sans);
-      background: var(--parchment);
+      background: var(--bg);
       color: var(--ink);
       min-height: 100dvh;
     }
@@ -39,17 +40,17 @@
     #gate {
       position: fixed; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      background: var(--parchment);
+      background: var(--bg);
       z-index: 1000;
       padding: 24px;
     }
     .gate-card {
       width: 100%; max-width: 360px;
-      background: white;
+      background: var(--surface);
       border: 1px solid var(--rule);
       border-radius: 12px;
       padding: 36px 32px;
-      box-shadow: 0 4px 32px rgba(26,23,20,.08);
+      box-shadow: 0 4px 48px rgba(0,0,0,.5);
     }
     .gate-logo {
       height: 28px; width: auto;
@@ -76,18 +77,18 @@
       font-family: var(--sans);
       font-size: 1rem;
       color: var(--ink);
-      background: var(--parchment);
+      background: var(--surface2);
       margin-bottom: 12px;
       transition: border-color .15s;
       outline: none;
     }
-    .gate-input:focus { border-color: var(--ink); }
+    .gate-input:focus { border-color: rgba(253,253,253,.3); }
     .gate-input.wrong { border-color: var(--danger); background: var(--danger-lt); }
     .gate-btn {
       width: 100%;
       padding: 11px;
-      background: var(--ink);
-      color: var(--parchment);
+      background: var(--accent);
+      color: white;
       border: none;
       border-radius: var(--radius);
       font-family: var(--sans);
@@ -96,7 +97,7 @@
       cursor: pointer;
       transition: background .15s;
     }
-    .gate-btn:hover { background: #333; }
+    .gate-btn:hover { background: var(--accent-lt); }
     .gate-error {
       font-size: .78rem;
       color: var(--danger);
@@ -117,7 +118,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      background: var(--parchment);
+      background: var(--bg);
       position: sticky; top: 0; z-index: 10;
     }
     .header-left { display: flex; align-items: center; gap: 14px; }
@@ -129,7 +130,7 @@
       letter-spacing: .08em;
       text-transform: uppercase;
       color: var(--ink);
-      opacity: .4;
+      opacity: .35;
     }
     .sign-out-btn {
       font-family: var(--sans);
@@ -144,7 +145,7 @@
       border-radius: 4px;
       transition: opacity .15s, background .15s;
     }
-    .sign-out-btn:hover { opacity: .7; background: var(--warm); }
+    .sign-out-btn:hover { opacity: .7; background: var(--surface2); }
 
     /* ── CONTENT ── */
     .content {
@@ -155,7 +156,7 @@
 
     /* ── CARD ── */
     .card {
-      background: white;
+      background: var(--surface);
       border: 1px solid var(--rule);
       border-radius: 10px;
       padding: 28px;
@@ -189,11 +190,11 @@
       font-family: var(--sans);
       font-size: 1rem;
       color: var(--ink);
-      background: var(--parchment);
+      background: var(--surface2);
       outline: none;
       transition: border-color .15s;
     }
-    input[type="text"]:focus { border-color: var(--ink); }
+    input[type="text"]:focus { border-color: rgba(253,253,253,.3); }
 
     /* ── FILE DROP ZONE ── */
     .drop-zone {
@@ -208,7 +209,7 @@
     }
     .drop-zone:hover, .drop-zone.drag-over {
       border-color: var(--accent);
-      background: rgba(139,58,42,.03);
+      background: rgba(204,51,153,.06);
     }
     .drop-zone input[type="file"] {
       position: absolute; inset: 0;
@@ -259,14 +260,14 @@
       position: relative;
     }
     .upload-btn:hover:not(:disabled) { background: var(--accent-lt); }
-    .upload-btn:disabled { background: #bbb; cursor: default; }
+    .upload-btn:disabled { background: #333; color: rgba(253,253,253,.3); cursor: default; }
 
     /* ── PROGRESS BAR ── */
     .progress-wrap {
       display: none;
       margin-top: 14px;
       height: 4px;
-      background: var(--warm);
+      background: var(--surface2);
       border-radius: 2px;
       overflow: hidden;
     }
@@ -289,8 +290,8 @@
       font-weight: 400;
     }
     .status-msg.show { display: block; }
-    .status-msg.success { background: var(--green-lt); color: var(--green); border: 1px solid rgba(30,110,58,.15); }
-    .status-msg.error   { background: var(--danger-lt); color: var(--danger); border: 1px solid rgba(181,43,43,.15); }
+    .status-msg.success { background: var(--green-lt); color: var(--green); border: 1px solid rgba(76,175,125,.2); }
+    .status-msg.error   { background: var(--danger-lt); color: var(--danger); border: 1px solid rgba(224,85,85,.2); }
 
     /* ── PROGRAM LIST ── */
     .prog-table {
@@ -315,7 +316,7 @@
     }
     .prog-table tr:last-child td { border-bottom: none; }
     .prog-table tr { transition: background .12s; }
-    .prog-table tr:hover td { background: rgba(26,23,20,.02); }
+    .prog-table tr:hover td { background: var(--surface2); }
 
     .pt-name {
       font-family: var(--serif);
@@ -325,7 +326,7 @@
     .pt-date {
       font-size: .75rem;
       color: var(--ink);
-      opacity: .4;
+      opacity: .35;
       font-weight: 300;
       white-space: nowrap;
     }
@@ -347,8 +348,8 @@
       border-color: var(--rule);
       color: var(--ink);
     }
-    .btn-copy:hover { background: var(--warm); border-color: var(--ink); }
-    .btn-copy.did-copy { background: var(--green-lt); color: var(--green); border-color: rgba(30,110,58,.2); }
+    .btn-copy:hover { background: var(--surface2); border-color: rgba(253,253,253,.2); }
+    .btn-copy.did-copy { background: var(--green-lt); color: var(--green); border-color: rgba(76,175,125,.2); }
 
     .btn-delete {
       background: transparent;
@@ -356,15 +357,14 @@
       color: var(--ink);
       opacity: .3;
     }
-    .btn-delete:hover { background: var(--danger-lt); border-color: rgba(181,43,43,.2); color: var(--danger); opacity: 1; }
+    .btn-delete:hover { background: var(--danger-lt); border-color: rgba(224,85,85,.2); color: var(--danger); opacity: 1; }
     .btn-delete:disabled { opacity: .15; cursor: default; }
 
     .list-empty {
       text-align: center;
       padding: 32px 0;
-      font-size: .85rem;
       color: var(--ink);
-      opacity: .3;
+      opacity: .25;
       font-style: italic;
       font-family: var(--serif);
       font-size: 1rem;
@@ -376,7 +376,7 @@
       100% { background-position:  400px 0; }
     }
     .shimmer {
-      background: linear-gradient(90deg, var(--warm) 25%, var(--parchment) 50%, var(--warm) 75%);
+      background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
       background-size: 800px 100%;
       animation: shimmer 1.4s infinite;
       border-radius: 3px;
@@ -408,9 +408,9 @@
 <div id="gate">
   <div class="gate-card">
     <svg class="gate-logo" viewBox="0 0 1500 1500" xmlns="http://www.w3.org/2000/svg" aria-label="Streetlamp">
-      <path fill="#1a1714" d="M1315.82,76.28v956.28h-259.08c0-242.15,93.17-430.39,133.23-500.08l42.65-74.2-73.14-44.44c-34.42-20.91-102.39-64.17-170.86-118.9-79.61-63.61-133.93-121.71-161.49-172.68l-24.86-45.99h513.55Z"/>
-      <path fill="#1a1714" d="M184.18,1032.56h259.08c0-242.17-93.17-430.39-133.23-500.07l-42.65-74.2,73.14-44.44c34.42-20.91,102.39-64.17,170.85-118.89,79.61-63.62,133.94-121.72,161.5-172.69l24.86-45.98H184.18v956.28Z"/>
-      <path fill="#1a1714" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69ZM793.98,487.29l228.52,51.56c-40.21,86.81-94.02,231.4-108.22,406.03h-120.3v-457.58ZM585.72,944.88c-14.2-174.63-68.01-319.22-108.22-406.03l228.78-51.62-.13,457.64h-120.43Z"/>
+      <path fill="#fdfdfd" d="M1315.82,76.28v956.28h-259.08c0-242.15,93.17-430.39,133.23-500.08l42.65-74.2-73.14-44.44c-34.42-20.91-102.39-64.17-170.86-118.9-79.61-63.61-133.93-121.71-161.49-172.68l-24.86-45.99h513.55Z"/>
+      <path fill="#fdfdfd" d="M184.18,1032.56h259.08c0-242.17-93.17-430.39-133.23-500.07l-42.65-74.2,73.14-44.44c34.42-20.91,102.39-64.17,170.85-118.89,79.61-63.62,133.94-121.72,161.5-172.69l24.86-45.98H184.18v956.28Z"/>
+      <path fill="#fdfdfd" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69ZM793.98,487.29l228.52,51.56c-40.21,86.81-94.02,231.4-108.22,406.03h-120.3v-457.58ZM585.72,944.88c-14.2-174.63-68.01-319.22-108.22-406.03l228.78-51.62-.13,457.64h-120.43Z"/>
     </svg>
     <div class="gate-title">Staff Access</div>
     <div class="gate-sub">Streetlamp Programs · Upload &amp; Manage</div>
@@ -425,9 +425,9 @@
   <header>
     <div class="header-left">
       <svg class="header-logo" viewBox="0 0 1500 1500" xmlns="http://www.w3.org/2000/svg" aria-label="Streetlamp">
-        <path fill="#1a1714" d="M1315.82,76.28v956.28h-259.08c0-242.15,93.17-430.39,133.23-500.08l42.65-74.2-73.14-44.44c-34.42-20.91-102.39-64.17-170.86-118.9-79.61-63.61-133.93-121.71-161.49-172.68l-24.86-45.99h513.55Z"/>
-        <path fill="#1a1714" d="M184.18,1032.56h259.08c0-242.17-93.17-430.39-133.23-500.07l-42.65-74.2,73.14-44.44c34.42-20.91,102.39-64.17,170.85-118.89,79.61-63.62,133.94-121.72,161.5-172.69l24.86-45.98H184.18v956.28Z"/>
-        <path fill="#1a1714" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69ZM793.98,487.29l228.52,51.56c-40.21,86.81-94.02,231.4-108.22,406.03h-120.3v-457.58ZM585.72,944.88c-14.2-174.63-68.01-319.22-108.22-406.03l228.78-51.62-.13,457.64h-120.43Z"/>
+        <path fill="#fdfdfd" d="M1315.82,76.28v956.28h-259.08c0-242.15,93.17-430.39,133.23-500.08l42.65-74.2-73.14-44.44c-34.42-20.91-102.39-64.17-170.86-118.9-79.61-63.61-133.93-121.71-161.49-172.68l-24.86-45.99h513.55Z"/>
+        <path fill="#fdfdfd" d="M184.18,1032.56h259.08c0-242.17-93.17-430.39-133.23-500.07l-42.65-74.2,73.14-44.44c34.42-20.91,102.39-64.17,170.85-118.89,79.61-63.62,133.94-121.72,161.5-172.69l24.86-45.98H184.18v956.28Z"/>
+        <path fill="#fdfdfd" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69ZM793.98,487.29l228.52,51.56c-40.21,86.81-94.02,231.4-108.22,406.03h-120.3v-457.58ZM585.72,944.88c-14.2-174.63-68.01-319.22-108.22-406.03l228.78-51.62-.13,457.64h-120.43Z"/>
       </svg>
       <div class="header-divider"></div>
       <span class="header-tag">Upload &amp; Manage</span>
