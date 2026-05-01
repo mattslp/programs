@@ -499,7 +499,7 @@
   }
 
   function openCurrent() {
-    if (currentUrl) window.open(currentUrl, '_blank');
+    if (currentName) window.open(getPrettyLink(currentName), '_blank');
   }
 
   function esc(s) {
