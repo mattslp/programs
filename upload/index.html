@@ -649,11 +649,30 @@
     el.className = 'status-msg' + (type ? ' show ' + type : '');
   }
 
+  // ── JSONP helper (bypasses CORS) ─────────────────────────────
+  function jsonp(url) {
+    return new Promise(function(resolve, reject) {
+      const cb     = 'slp_' + Date.now();
+      const script = document.createElement('script');
+      window[cb] = function(data) {
+        delete window[cb];
+        document.body.removeChild(script);
+        resolve(data);
+      };
+      script.onerror = function() {
+        delete window[cb];
+        document.body.removeChild(script);
+        reject(new Error('JSONP failed'));
+      };
+      script.src = url + '&callback=' + cb;
+      document.body.appendChild(script);
+    });
+  }
+
   // ── LOAD PROGRAMS ────────────────────────────────────────────
   async function loadPrograms() {
     try {
-      const res      = await fetch(APPS_SCRIPT_URL + '?action=list');
-      const programs = await res.json();
+      const programs = await jsonp(APPS_SCRIPT_URL + '?action=list');
       renderPrograms(programs);
     } catch (err) {
       document.getElementById('progTbody').innerHTML =
