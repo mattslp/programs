@@ -11,12 +11,13 @@
   <style>
     /* ── TOKENS ── */
     :root {
-      --ink:       #1a1714;
-      --parchment: #f7f3ee;
-      --warm:      #e8dfd4;
-      --accent:    #8b3a2a;
-      --accent-lt: #c4624e;
-      --rule:      rgba(26,23,20,.12);
+      --ink:       #fdfdfd;
+      --bg:        #020202;
+      --surface:   #0f0f0f;
+      --surface2:  #181818;
+      --accent:    #cc3399;
+      --accent-lt: #e055b3;
+      --rule:      rgba(253,253,253,.09);
       --radius:    4px;
       --serif:     'Cormorant Garamond', Georgia, serif;
       --sans:      'DM Sans', system-ui, sans-serif;
@@ -27,7 +28,7 @@
     html, body { height: 100%; }
     body {
       font-family: var(--sans);
-      background: var(--parchment);
+      background: var(--bg);
       color: var(--ink);
       display: flex;
       flex-direction: column;
@@ -43,7 +44,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      background: var(--parchment);
+      background: var(--bg);
       position: sticky;
       top: 0;
       z-index: 10;
@@ -57,7 +58,7 @@
       letter-spacing: .1em;
       text-transform: uppercase;
       color: var(--ink);
-      opacity: .4;
+      opacity: .35;
     }
 
     .shell {
@@ -72,6 +73,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      background: var(--surface);
     }
     .sidebar-head {
       padding: 18px 24px 12px;
@@ -84,12 +86,12 @@
       letter-spacing: .1em;
       text-transform: uppercase;
       color: var(--ink);
-      opacity: .4;
+      opacity: .3;
     }
     .program-list { flex: 1; overflow-y: auto; padding: 8px 0; }
     .program-list::-webkit-scrollbar { width: 4px; }
     .program-list::-webkit-scrollbar-track { background: transparent; }
-    .program-list::-webkit-scrollbar-thumb { background: var(--warm); border-radius: 2px; }
+    .program-list::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 2px; }
 
     .program-item {
       display: flex;
@@ -100,8 +102,8 @@
       transition: background .15s, border-color .15s;
       animation: fadeUp .25s var(--ease) both;
     }
-    .program-item:hover { background: var(--warm); }
-    .program-item.active { border-left-color: var(--accent); background: rgba(139,58,42,.05); }
+    .program-item:hover { background: var(--surface2); }
+    .program-item.active { border-left-color: var(--accent); background: rgba(204,51,153,.07); }
     .program-item.active .prog-name { color: var(--accent); }
 
     .prog-info { flex: 1; min-width: 0; }
@@ -115,7 +117,7 @@
       line-height: 1.3;
       transition: color .15s;
     }
-    .prog-date { font-size: .7rem; color: var(--ink); opacity: .4; margin-top: 2px; font-weight: 300; }
+    .prog-date { font-size: .7rem; color: var(--ink); opacity: .35; margin-top: 2px; font-weight: 300; }
 
     .copy-btn {
       opacity: 0;
@@ -133,12 +135,12 @@
       flex-shrink: 0;
     }
     .program-item:hover .copy-btn { opacity: 1; }
-    .copy-btn:hover { background: var(--ink); color: var(--parchment); border-color: var(--ink); }
+    .copy-btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
     .copy-btn.did-copy { background: var(--accent); color: white; border-color: var(--accent); opacity: 1; }
 
-    .sidebar-state { padding: 32px 24px; font-size: .85rem; color: var(--ink); opacity: .4; font-weight: 300; }
+    .sidebar-state { padding: 32px 24px; font-size: .85rem; color: var(--ink); opacity: .3; font-weight: 300; }
 
-    main { display: flex; flex-direction: column; min-height: 0; position: relative; }
+    main { display: flex; flex-direction: column; min-height: 0; position: relative; background: var(--bg); }
 
     .viewer-toolbar {
       padding: 14px 28px;
@@ -149,6 +151,7 @@
       gap: 12px;
       min-height: 57px;
       flex-shrink: 0;
+      background: var(--bg);
     }
     .viewer-title { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; font-style: italic; }
     .viewer-actions { display: flex; gap: 8px; }
@@ -165,11 +168,11 @@
       border: 1px solid transparent;
     }
     .action-btn.outline { background: transparent; border-color: var(--rule); color: var(--ink); }
-    .action-btn.outline:hover { background: var(--warm); border-color: var(--ink); }
+    .action-btn.outline:hover { background: var(--surface2); border-color: rgba(253,253,253,.2); }
     .action-btn.solid { background: var(--accent); color: white; }
     .action-btn.solid:hover { background: var(--accent-lt); }
 
-    .viewer-frame-wrap { flex: 1; position: relative; background: #d8d0c6; min-height: 0; }
+    .viewer-frame-wrap { flex: 1; position: relative; background: #080808; min-height: 0; }
     iframe#viewer {
       position: absolute; inset: 0;
       width: 100%; height: 100%;
@@ -205,7 +208,7 @@
       bottom: 16px;
       right: 16px;
       z-index: 100;
-      background: rgba(247,243,238,.88);
+      background: rgba(15,15,15,.88);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid var(--rule);
@@ -224,7 +227,7 @@
       transition: opacity .4s .6s, transform .4s .6s var(--ease), background .15s;
       cursor: pointer;
     }
-    .embed-footer:hover { background: rgba(247,243,238,1); }
+    .embed-footer:hover { background: rgba(24,24,24,.95); }
     .ef-logo { height: 18px; width: auto; display: block; opacity: .7; }
     .ef-label { opacity: .5; }
 
@@ -237,11 +240,11 @@
       position: fixed; inset: 0;
       flex-direction: column;
       align-items: center; justify-content: center;
-      gap: 12px; background: var(--parchment);
+      gap: 12px; background: var(--bg);
     }
     .not-found.show { display: flex; }
-    .not-found .nf-icon { height: 48px; width: auto; opacity: .2; }
-    .not-found p  { font-family: var(--serif); font-style: italic; font-size: 1.15rem; opacity: .45; }
+    .not-found .nf-icon { height: 48px; width: auto; opacity: .15; }
+    .not-found p  { font-family: var(--serif); font-style: italic; font-size: 1.15rem; opacity: .4; }
     .not-found a  { font-size: .78rem; color: var(--accent); text-decoration: none; margin-top: 4px; opacity: .7; }
     .not-found a:hover { opacity: 1; }
 
@@ -261,7 +264,7 @@
       100% { background-position:  400px 0; }
     }
     .shimmer {
-      background: linear-gradient(90deg, var(--warm) 25%, var(--parchment) 50%, var(--warm) 75%);
+      background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
       background-size: 800px 100%;
       animation: shimmer 1.4s infinite;
       border-radius: var(--radius);
@@ -281,21 +284,9 @@
 <!-- ══ HEADER (normal mode) ══════════════════════════════════ -->
 <header>
   <svg class="header-logo" viewBox="0 0 1500 1500" xmlns="http://www.w3.org/2000/svg" aria-label="Streetlamp">
-    <path fill="var(--ink)" d="M1315.82,76.28v956.28h-259.08c0-242.15,93.17-430.39,133.23-500.08l42.65-74.2-73.14-44.44c-34.42-20.91-102.39-64.17-170.86-118.9-79.61-63.61-133.93-121.71-161.49-172.68l-24.86-45.99h513.55Z"/>
-    <path fill="var(--ink)" d="M184.18,1032.56h259.08c0-242.17-93.17-430.39-133.23-500.07l-42.65-74.2,73.14-44.44c34.42-20.91,102.39-64.17,170.85-118.89,79.61-63.62,133.94-121.72,161.5-172.69l24.86-45.98H184.18v956.28Z"/>
-    <path fill="var(--ink)" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69ZM793.98,487.29l228.52,51.56c-40.21,86.81-94.02,231.4-108.22,406.03h-120.3v-457.58ZM585.72,944.88c-14.2-174.63-68.01-319.22-108.22-406.03l228.78-51.62-.13,457.64h-120.43Z"/>
-    <g fill="var(--ink)">
-      <path d="M194.02,1383.57c4.76,3.02,9.68,5.31,14.76,6.88,5.08,1.57,9.97,2.35,14.67,2.35,1.97,0,3.67-.13,5.1-.39,1.42-.26,2.6-.64,3.53-1.13.93-.49,1.6-1.12,2-1.87.41-.75.61-1.62.61-2.61,0-1.62-.73-3.08-2.18-4.35-1.45-1.28-3.35-2.51-5.7-3.7-2.35-1.19-5.05-2.41-8.1-3.66-3.05-1.25-6.14-2.67-9.27-4.27-3.13-1.6-6.23-3.44-9.27-5.53-3.05-2.09-5.75-4.56-8.1-7.4-2.35-2.84-4.25-6.17-5.7-9.97-1.45-3.8-2.18-8.2-2.18-13.19,0-5.98,1.09-11.38,3.27-16.2,2.18-4.82,5.3-8.93,9.36-12.32,4.06-3.4,8.98-6.01,14.76-7.84,5.78-1.83,12.29-2.74,19.55-2.74s13.34.73,18.94,2.18c5.6,1.45,10.87,3.57,15.81,6.36l-8.17,29.61c-4.11-2.15-8.31-3.9-12.6-5.27-4.29-1.36-8.63-2.05-13.04-2.05-1.51,0-2.86.12-4.04.35s-2.19.58-3,1.04c-.81.47-1.43,1.04-1.87,1.74s-.65,1.51-.65,2.44c0,1.51.72,2.86,2.17,4.05,1.45,1.19,3.35,2.35,5.69,3.48,2.35,1.13,5.03,2.31,8.04,3.53,3.01,1.22,6.1,2.61,9.26,4.18,3.16,1.57,6.24,3.4,9.26,5.49,3.01,2.09,5.69,4.59,8.04,7.49,2.35,2.9,4.25,6.27,5.69,10.1,1.45,3.83,2.17,8.3,2.17,13.41,0,6.04-1.19,11.51-3.57,16.41-2.38,4.91-5.7,9.1-9.97,12.58-4.27,3.48-9.38,6.18-15.33,8.1-5.95,1.92-12.5,2.87-19.64,2.87-7.9,0-14.89-.87-20.99-2.61-6.1-1.74-11.76-4.32-16.98-7.75l7.66-29.78Z"/>
-      <path d="M368.44,1329.84h-29.61v91.7h-38.32v-91.7h-29.61v-32.05h97.53v32.05Z"/>
-      <path d="M380.2,1297.79c5.46-.29,10.84-.52,16.15-.7,5.31-.17,10.58-.26,15.81-.26,10.85,0,20.46,1,28.82,3,8.36,2,15.4,4.89,21.12,8.67,5.72,3.77,10.06,8.38,13.02,13.8,2.96,5.43,4.44,11.57,4.44,18.42,0,3.43-.38,6.66-1.13,9.71-.75,3.05-1.87,5.91-3.35,8.58-1.48,2.67-3.29,5.17-5.44,7.49-2.15,2.32-4.61,4.44-7.4,6.36,3.6,7.08,7.15,14.7,10.67,22.86,3.51,8.16,6.92,16.76,10.23,25.82h-41.89c-2.03-5.92-4.3-11.94-6.79-18.07-2.5-6.12-5.23-12.24-8.19-18.33-1.29.17-2.57.3-3.83.39-1.26.09-2.57.19-3.92.3v35.7h-38.32v-123.75ZM418.52,1356.66h1.4c3.32,0,6.25-.33,8.79-1,2.54-.67,4.66-1.61,6.38-2.82,1.72-1.22,3.02-2.72,3.89-4.52.87-1.79,1.31-3.82,1.31-6.08,0-2.14-.44-4.07-1.31-5.77s-2.17-3.17-3.89-4.38c-1.72-1.21-3.85-2.14-6.38-2.78-2.54-.64-5.46-.96-8.79-.96h-1.4v28.3Z"/>
-      <path d="M574.22,1329.32h-42.5v14.37h40.15v31.52h-40.15v14.8h42.5v31.52h-80.81v-123.75h80.81v31.52Z"/>
-      <path d="M670.01,1329.32h-42.5v14.37h40.15v31.52h-40.15v14.8h42.5v31.52h-80.81v-123.75h80.81v31.52Z"/>
-      <path d="M777.21,1329.84h-29.61v91.7h-38.32v-91.7h-29.61v-32.05h97.53v32.05Z"/>
-      <path d="M870.83,1389.41h36.05v32.13h-74.37v-123.75h38.32v91.61Z"/>
-      <path d="M994.2,1297.79c7.61,20.38,14.41,41,20.39,61.87,5.98,20.87,10.72,41.49,14.21,61.87h-39.45c-.47-3.13-.95-6.28-1.44-9.45-.5-3.16-1.03-6.31-1.61-9.45h-33.34c-.58,3.25-1.12,6.43-1.61,9.54-.5,3.11-.97,6.23-1.44,9.36h-38.32c3.48-20.38,8.22-41,14.23-61.87,6-20.87,12.81-41.5,20.41-61.87h47.98ZM979.92,1372.86c-1.46-6.1-3.06-12.19-4.8-18.29-1.75-6.1-3.55-12.13-5.41-18.11-1.98,5.98-3.84,12.02-5.59,18.11-1.75,6.1-3.35,12.19-4.8,18.29h20.6Z"/>
-      <path d="M1191.98,1297.79c1.8,11.26,3.34,22.21,4.62,32.83,1.28,10.62,2.32,21.05,3.14,31.26.81,10.22,1.44,20.28,1.87,30.17.43,9.9.77,19.73,1,29.48h-38.49c-.23-7.43-.5-14.86-.79-22.29-.29-7.43-.63-14.79-1.01-22.08-.38-7.28-.83-14.44-1.36-21.47-.53-7.02-1.14-13.85-1.85-20.47l-19.85,86.3h-40.49l-19.77-86.3c-.69,6.62-1.3,13.44-1.81,20.47-.52,7.02-.98,14.18-1.38,21.47-.4,7.29-.73,14.65-.99,22.08-.26,7.43-.5,14.86-.73,22.29h-37.45c.23-9.75.56-19.58,1-29.48.43-9.9,1.07-19.95,1.91-30.17.84-10.22,1.88-20.64,3.13-31.26,1.25-10.63,2.8-21.57,4.65-32.83h54.13l18.55,80.55,18.37-80.55h53.59Z"/>
-      <path d="M1217.51,1297.79c6.39-.41,12.08-.67,17.07-.78,4.99-.12,9.78-.17,14.37-.17,10.57,0,19.99,1.06,28.26,3.18,8.27,2.12,15.27,5.2,20.99,9.23,5.72,4.04,10.09,8.96,13.11,14.76,3.02,5.81,4.53,12.4,4.53,19.77s-1.37,13.77-4.1,19.55c-2.73,5.78-6.67,10.75-11.82,14.94-5.15,4.18-11.39,7.52-18.75,10.01-7.36,2.5-15.63,4.06-24.81,4.7h-.52v28.56h-38.32v-123.75ZM1255.82,1361.28h1.22c2.97,0,5.66-.38,8.05-1.13,2.39-.75,4.43-1.83,6.12-3.22,1.69-1.39,3-3.11,3.94-5.14.93-2.03,1.4-4.35,1.4-6.97,0-2.44-.41-4.63-1.22-6.57-.82-1.94-2.04-3.61-3.67-5.01-1.63-1.39-3.67-2.45-6.12-3.18-2.45-.72-5.28-1.09-8.48-1.09h-1.22v32.31Z"/>
-    </g>
+    <path fill="#fdfdfd" d="M1315.82,76.28v956.28h-259.08c0-242.15,93.17-430.39,133.23-500.08l42.65-74.2-73.14-44.44c-34.42-20.91-102.39-64.17-170.86-118.9-79.61-63.61-133.93-121.71-161.49-172.68l-24.86-45.99h513.55Z"/>
+    <path fill="#fdfdfd" d="M184.18,1032.56h259.08c0-242.17-93.17-430.39-133.23-500.07l-42.65-74.2,73.14-44.44c34.42-20.91,102.39-64.17,170.85-118.89,79.61-63.62,133.94-121.72,161.5-172.69l24.86-45.98H184.18v956.28Z"/>
+    <path fill="#fdfdfd" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69ZM793.98,487.29l228.52,51.56c-40.21,86.81-94.02,231.4-108.22,406.03h-120.3v-457.58ZM585.72,944.88c-14.2-174.63-68.01-319.22-108.22-406.03l228.78-51.62-.13,457.64h-120.43Z"/>
   </svg>
   <div class="header-divider"></div>
   <span class="tagline">Digital Programs</span>
@@ -335,18 +326,18 @@
 <!-- ══ EMBED MODE: branded footer bug ════════════════════════ -->
 <a class="embed-footer" id="embedFooter" href="https://programs.streetlamp.org" target="_blank">
   <!-- Streetlamp lamp icon only, no wordmark, kept compact -->
-  <svg class="ef-logo" viewBox="0 0 1500 1120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path fill="var(--ink)" d="M1315.82,76.28v956.28h-259.08c0-242.15,93.17-430.39,133.23-500.08l42.65-74.2-73.14-44.44c-34.42-20.91-102.39-64.17-170.86-118.9-79.61-63.61-133.93-121.71-161.49-172.68l-24.86-45.99h513.55Z"/>
-    <path fill="var(--ink)" d="M184.18,1032.56h259.08c0-242.17-93.17-430.39-133.23-500.07l-42.65-74.2,73.14-44.44c34.42-20.91,102.39-64.17,170.85-118.89,79.61-63.62,133.94-121.72,161.5-172.69l24.86-45.98H184.18v956.28Z"/>
-    <path fill="var(--ink)" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69ZM793.98,487.29l228.52,51.56c-40.21,86.81-94.02,231.4-108.22,406.03h-120.3v-457.58ZM585.72,944.88c-14.2-174.63-68.01-319.22-108.22-406.03l228.78-51.62-.13,457.64h-120.43Z"/>
+  <svg class="ef-logo" viewBox="0 0 1500 1500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#fdfdfd" d="M1315.82,76.28v956.28h-259.08c0-242.15,93.17-430.39,133.23-500.08l42.65-74.2-73.14-44.44c-34.42-20.91-102.39-64.17-170.86-118.9-79.61-63.61-133.93-121.71-161.49-172.68l-24.86-45.99h513.55Z"/>
+    <path fill="#fdfdfd" d="M184.18,1032.56h259.08c0-242.17-93.17-430.39-133.23-500.07l-42.65-74.2,73.14-44.44c34.42-20.91,102.39-64.17,170.85-118.89,79.61-63.62,133.94-121.72,161.5-172.69l24.86-45.98H184.18v956.28Z"/>
+    <path fill="#fdfdfd" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69ZM793.98,487.29l228.52,51.56c-40.21,86.81-94.02,231.4-108.22,406.03h-120.3v-457.58ZM585.72,944.88c-14.2-174.63-68.01-319.22-108.22-406.03l228.78-51.62-.13,457.64h-120.43Z"/>
   </svg>
   <span class="ef-label" style="display:none">programs.streetlamp.org</span>
 </a>
 
 <!-- ══ NOT FOUND (embed mode) ════════════════════════════════ -->
 <div class="not-found" id="notFound">
-  <svg class="nf-icon" viewBox="0 0 1500 1120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path fill="var(--ink)" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69Z"/>
+  <svg class="nf-icon" viewBox="0 0 1500 1500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path fill="#fdfdfd" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69Z"/>
   </svg>
   <p>Program not found</p>
   <a href="https://programs.streetlamp.org">View all programs →</a>
@@ -518,12 +509,11 @@
   font-family: var(--sans);
   font-size: .68rem;
   color: var(--ink);
-  opacity: .18;
-  text-decoration: none;
+  opacity: .15;
   letter-spacing: .04em;
   transition: opacity .2s;
   z-index: 50;
-" onmouseover="this.style.opacity='.45'" onmouseout="this.style.opacity='.18'">Staff ↗</a>
+" onmouseover="this.style.opacity='.5'" onmouseout="this.style.opacity='.15'">Staff ↗</a>
 
 </body>
 </html>
