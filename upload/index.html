@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload · Streetlamp Programs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink:       #1a1714;
+      --parchment: #f7f3ee;
+      --warm:      #e8dfd4;
+      --accent:    #8b3a2a;
+      --accent-lt: #c4624e;
+      --danger:    #b52b2b;
+      --danger-lt: #fdf0f0;
+      --rule:      rgba(26,23,20,.12);
+      --green:     #1e6e3a;
+      --green-lt:  #f0faf4;
+      --radius:    6px;
+      --serif:     'Cormorant Garamond', Georgia, serif;
+      --sans:      'DM Sans', system-ui, sans-serif;
+      --ease:      cubic-bezier(.22,.68,0,1.2);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: var(--sans);
+      background: var(--parchment);
+      color: var(--ink);
+      min-height: 100dvh;
+    }
+
+    /* ══ PASSWORD GATE ════════════════════════════════════════ */
+    #gate {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--parchment);
+      z-index: 1000;
+      padding: 24px;
+    }
+    .gate-card {
+      width: 100%; max-width: 360px;
+      background: white;
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 36px 32px;
+      box-shadow: 0 4px 32px rgba(26,23,20,.08);
+    }
+    .gate-logo {
+      height: 28px; width: auto;
+      display: block; margin-bottom: 24px;
+    }
+    .gate-title {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .gate-sub {
+      font-size: .8rem;
+      color: var(--ink);
+      opacity: .4;
+      margin-bottom: 24px;
+      font-weight: 300;
+    }
+    .gate-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      font-family: var(--sans);
+      font-size: 1rem;
+      color: var(--ink);
+      background: var(--parchment);
+      margin-bottom: 12px;
+      transition: border-color .15s;
+      outline: none;
+    }
+    .gate-input:focus { border-color: var(--ink); }
+    .gate-input.wrong { border-color: var(--danger); background: var(--danger-lt); }
+    .gate-btn {
+      width: 100%;
+      padding: 11px;
+      background: var(--ink);
+      color: var(--parchment);
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--sans);
+      font-size: .9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .gate-btn:hover { background: #333; }
+    .gate-error {
+      font-size: .78rem;
+      color: var(--danger);
+      margin-top: 10px;
+      min-height: 18px;
+      text-align: center;
+    }
+
+    /* ══ MAIN APP (hidden until auth) ════════════════════════ */
+    #app { display: none; }
+    #app.visible { display: block; }
+
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--rule);
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background: var(--parchment);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-logo { height: 28px; width: auto; display: block; }
+    .header-divider { width: 1px; height: 20px; background: var(--rule); }
+    .header-tag {
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      opacity: .4;
+    }
+    .sign-out-btn {
+      font-family: var(--sans);
+      font-size: .75rem;
+      font-weight: 500;
+      color: var(--ink);
+      opacity: .35;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: opacity .15s, background .15s;
+    }
+    .sign-out-btn:hover { opacity: .7; background: var(--warm); }
+
+    /* ── CONTENT ── */
+    .content {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 36px 24px 64px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: white;
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 28px;
+      margin-bottom: 28px;
+    }
+    .card-title {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ── FORM ── */
+    label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 500;
+      letter-spacing: .03em;
+      color: var(--ink);
+      opacity: .6;
+      margin-bottom: 6px;
+    }
+    .field { margin-bottom: 18px; }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--rule);
+      border-radius: var(--radius);
+      font-family: var(--sans);
+      font-size: 1rem;
+      color: var(--ink);
+      background: var(--parchment);
+      outline: none;
+      transition: border-color .15s;
+    }
+    input[type="text"]:focus { border-color: var(--ink); }
+
+    /* ── FILE DROP ZONE ── */
+    .drop-zone {
+      border: 1.5px dashed var(--rule);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      position: relative;
+      margin-bottom: 18px;
+    }
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: var(--accent);
+      background: rgba(139,58,42,.03);
+    }
+    .drop-zone input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .drop-icon { font-size: 1.8rem; margin-bottom: 8px; line-height: 1; }
+    .drop-label {
+      font-size: .85rem;
+      color: var(--ink);
+      opacity: .5;
+      font-weight: 300;
+    }
+    .drop-label strong { font-weight: 500; opacity: 1; color: var(--accent); }
+    .file-chosen {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--green-lt);
+      border: 1px solid rgba(30,110,58,.15);
+      border-radius: var(--radius);
+      margin-bottom: 18px;
+      font-size: .85rem;
+      color: var(--green);
+    }
+    .file-chosen.show { display: flex; }
+    .file-chosen .fc-name { flex: 1; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-chosen .fc-clear {
+      background: none; border: none; cursor: pointer;
+      color: var(--green); opacity: .5; font-size: 1rem; padding: 0 2px;
+      transition: opacity .15s;
+    }
+    .file-chosen .fc-clear:hover { opacity: 1; }
+
+    /* ── UPLOAD BUTTON ── */
+    .upload-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--sans);
+      font-size: .9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .15s;
+      position: relative;
+    }
+    .upload-btn:hover:not(:disabled) { background: var(--accent-lt); }
+    .upload-btn:disabled { background: #bbb; cursor: default; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      display: none;
+      margin-top: 14px;
+      height: 4px;
+      background: var(--warm);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-wrap.show { display: block; }
+    .progress-bar {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0%;
+      transition: width .3s var(--ease);
+    }
+
+    /* ── STATUS MESSAGES ── */
+    .status-msg {
+      display: none;
+      margin-top: 14px;
+      padding: 11px 14px;
+      border-radius: var(--radius);
+      font-size: .85rem;
+      font-weight: 400;
+    }
+    .status-msg.show { display: block; }
+    .status-msg.success { background: var(--green-lt); color: var(--green); border: 1px solid rgba(30,110,58,.15); }
+    .status-msg.error   { background: var(--danger-lt); color: var(--danger); border: 1px solid rgba(181,43,43,.15); }
+
+    /* ── PROGRAM LIST ── */
+    .prog-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .prog-table th {
+      text-align: left;
+      font-size: .68rem;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      opacity: .35;
+      padding: 0 10px 10px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .prog-table td {
+      padding: 13px 10px;
+      border-bottom: 1px solid var(--rule);
+      vertical-align: middle;
+    }
+    .prog-table tr:last-child td { border-bottom: none; }
+    .prog-table tr { transition: background .12s; }
+    .prog-table tr:hover td { background: rgba(26,23,20,.02); }
+
+    .pt-name {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .pt-date {
+      font-size: .75rem;
+      color: var(--ink);
+      opacity: .4;
+      font-weight: 300;
+      white-space: nowrap;
+    }
+    .pt-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+    .btn-sm {
+      font-family: var(--sans);
+      font-size: .72rem;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all .15s;
+      white-space: nowrap;
+    }
+    .btn-copy {
+      background: transparent;
+      border-color: var(--rule);
+      color: var(--ink);
+    }
+    .btn-copy:hover { background: var(--warm); border-color: var(--ink); }
+    .btn-copy.did-copy { background: var(--green-lt); color: var(--green); border-color: rgba(30,110,58,.2); }
+
+    .btn-delete {
+      background: transparent;
+      border-color: transparent;
+      color: var(--ink);
+      opacity: .3;
+    }
+    .btn-delete:hover { background: var(--danger-lt); border-color: rgba(181,43,43,.2); color: var(--danger); opacity: 1; }
+    .btn-delete:disabled { opacity: .15; cursor: default; }
+
+    .list-empty {
+      text-align: center;
+      padding: 32px 0;
+      font-size: .85rem;
+      color: var(--ink);
+      opacity: .3;
+      font-style: italic;
+      font-family: var(--serif);
+      font-size: 1rem;
+    }
+
+    /* ── SHIMMER ── */
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position:  400px 0; }
+    }
+    .shimmer {
+      background: linear-gradient(90deg, var(--warm) 25%, var(--parchment) 50%, var(--warm) 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 3px;
+      height: 12px; display: inline-block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .prog-table tbody tr { animation: fadeIn .2s var(--ease) both; }
+
+    /* ── VIEW LINK ── */
+    .view-link {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: .78rem;
+      color: var(--ink);
+      opacity: .4;
+      text-decoration: none;
+      transition: opacity .15s;
+    }
+    .view-link:hover { opacity: .8; }
+  </style>
+</head>
+<body>
+
+<!-- ══ PASSWORD GATE ══════════════════════════════════════════ -->
+<div id="gate">
+  <div class="gate-card">
+    <svg class="gate-logo" viewBox="0 0 1500 1500" xmlns="http://www.w3.org/2000/svg" aria-label="Streetlamp">
+      <path fill="#1a1714" d="M1315.82,76.28v956.28h-259.08c0-242.15,93.17-430.39,133.23-500.08l42.65-74.2-73.14-44.44c-34.42-20.91-102.39-64.17-170.86-118.9-79.61-63.61-133.93-121.71-161.49-172.68l-24.86-45.99h513.55Z"/>
+      <path fill="#1a1714" d="M184.18,1032.56h259.08c0-242.17-93.17-430.39-133.23-500.07l-42.65-74.2,73.14-44.44c34.42-20.91,102.39-64.17,170.85-118.89,79.61-63.62,133.94-121.72,161.5-172.69l24.86-45.98H184.18v956.28Z"/>
+      <path fill="#1a1714" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69ZM793.98,487.29l228.52,51.56c-40.21,86.81-94.02,231.4-108.22,406.03h-120.3v-457.58ZM585.72,944.88c-14.2-174.63-68.01-319.22-108.22-406.03l228.78-51.62-.13,457.64h-120.43Z"/>
+    </svg>
+    <div class="gate-title">Staff Access</div>
+    <div class="gate-sub">Streetlamp Programs · Upload &amp; Manage</div>
+    <input class="gate-input" type="password" id="gateInput" placeholder="Password" autocomplete="current-password">
+    <button class="gate-btn" onclick="checkPassword()">Enter</button>
+    <div class="gate-error" id="gateError"></div>
+  </div>
+</div>
+
+<!-- ══ APP ════════════════════════════════════════════════════ -->
+<div id="app">
+  <header>
+    <div class="header-left">
+      <svg class="header-logo" viewBox="0 0 1500 1500" xmlns="http://www.w3.org/2000/svg" aria-label="Streetlamp">
+        <path fill="#1a1714" d="M1315.82,76.28v956.28h-259.08c0-242.15,93.17-430.39,133.23-500.08l42.65-74.2-73.14-44.44c-34.42-20.91-102.39-64.17-170.86-118.9-79.61-63.61-133.93-121.71-161.49-172.68l-24.86-45.99h513.55Z"/>
+        <path fill="#1a1714" d="M184.18,1032.56h259.08c0-242.17-93.17-430.39-133.23-500.07l-42.65-74.2,73.14-44.44c34.42-20.91,102.39-64.17,170.85-118.89,79.61-63.62,133.94-121.72,161.5-172.69l24.86-45.98H184.18v956.28Z"/>
+        <path fill="#1a1714" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69ZM793.98,487.29l228.52,51.56c-40.21,86.81-94.02,231.4-108.22,406.03h-120.3v-457.58ZM585.72,944.88c-14.2-174.63-68.01-319.22-108.22-406.03l228.78-51.62-.13,457.64h-120.43Z"/>
+      </svg>
+      <div class="header-divider"></div>
+      <span class="header-tag">Upload &amp; Manage</span>
+    </div>
+    <button class="sign-out-btn" onclick="signOut()">Sign out</button>
+  </header>
+
+  <div class="content">
+
+    <!-- Upload card -->
+    <div class="card">
+      <div class="card-title">Upload a Program</div>
+
+      <div class="field">
+        <label for="showName">Show Name</label>
+        <input type="text" id="showName" placeholder="e.g. Annie Kids — Spring 2025" autocomplete="off">
+      </div>
+
+      <label>PDF File</label>
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="pdfFile" accept="application/pdf">
+        <div class="drop-icon">📄</div>
+        <div class="drop-label"><strong>Choose a PDF</strong> or drag it here</div>
+      </div>
+      <div class="file-chosen" id="fileChosen">
+        <span>📄</span>
+        <span class="fc-name" id="fcName"></span>
+        <button class="fc-clear" onclick="clearFile()" title="Remove">✕</button>
+      </div>
+
+      <button class="upload-btn" id="uploadBtn" onclick="uploadFile()" disabled>Upload Program</button>
+      <div class="progress-wrap" id="progressWrap"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="status-msg" id="statusMsg"></div>
+    </div>
+
+    <!-- Programs list card -->
+    <div class="card">
+      <div class="card-title">Uploaded Programs</div>
+      <div id="listWrap">
+        <table class="prog-table">
+          <thead>
+            <tr>
+              <th>Show</th>
+              <th>Uploaded</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="progTbody">
+            <tr><td colspan="3"><div style="padding:8px 0"><span class="shimmer" style="width:55%"></span></div></td></tr>
+            <tr><td colspan="3"><div style="padding:8px 0"><span class="shimmer" style="width:40%"></span></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <a class="view-link" href="/">← View public programs page</a>
+  </div>
+</div>
+
+<script>
+  // ── CONFIG ───────────────────────────────────────────────────
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw44bEVHQ9gSOwGh5eeq20IFfmbpFV3UaF1DNKmTNuZmXZuDpG54AfD2xUHJFiBfWAabg/exec';
+  const BASE_URL        = 'https://programs.streetlamp.org';
+  // SHA-256 of "programsupload"
+  const PASS_HASH       = 'ccb84f0ccef348f99dc93e68e086be439891449c02a6164728528f548e2bf553';
+  const STORAGE_KEY     = 'slp_auth';
+
+  // ── AUTH ─────────────────────────────────────────────────────
+  async function sha256(str) {
+    const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function checkPassword() {
+    const input = document.getElementById('gateInput');
+    const hash  = await sha256(input.value);
+    if (hash === PASS_HASH) {
+      sessionStorage.setItem(STORAGE_KEY, '1');
+      showApp();
+    } else {
+      input.classList.add('wrong');
+      document.getElementById('gateError').textContent = 'Incorrect password.';
+      setTimeout(function() { input.classList.remove('wrong'); input.value = ''; }, 1200);
+    }
+  }
+
+  function showApp() {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    loadPrograms();
+  }
+
+  function signOut() {
+    sessionStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+
+  // Check on load
+  if (sessionStorage.getItem(STORAGE_KEY) === '1') {
+    showApp();
+  }
+
+  // Enter key on password field
+  document.getElementById('gateInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPassword();
+  });
+
+  // ── FILE HANDLING ────────────────────────────────────────────
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('pdfFile');
+
+  dropZone.addEventListener('dragover', function(e) { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', function()  { dropZone.classList.remove('drag-over'); });
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type === 'application/pdf') setFile(file);
+  });
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files[0]) setFile(fileInput.files[0]);
+  });
+
+  let selectedFile = null;
+
+  function setFile(file) {
+    selectedFile = file;
+    dropZone.style.display = 'none';
+    const fc = document.getElementById('fileChosen');
+    fc.classList.add('show');
+    document.getElementById('fcName').textContent = file.name;
+    updateUploadBtn();
+  }
+
+  function clearFile() {
+    selectedFile = null;
+    fileInput.value = '';
+    dropZone.style.display = '';
+    document.getElementById('fileChosen').classList.remove('show');
+    updateUploadBtn();
+  }
+
+  function updateUploadBtn() {
+    const name = document.getElementById('showName').value.trim();
+    document.getElementById('uploadBtn').disabled = !(name && selectedFile);
+  }
+
+  document.getElementById('showName').addEventListener('input', updateUploadBtn);
+
+  // ── UPLOAD ───────────────────────────────────────────────────
+  function uploadFile() {
+    const showName = document.getElementById('showName').value.trim();
+    if (!showName || !selectedFile) return;
+
+    const btn = document.getElementById('uploadBtn');
+    btn.disabled = true;
+    btn.textContent = 'Uploading…';
+
+    const progress = document.getElementById('progressWrap');
+    const bar      = document.getElementById('progressBar');
+    progress.classList.add('show');
+    bar.style.width = '15%';
+
+    setStatus('', '');
+
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      bar.style.width = '40%';
+      const base64 = e.target.result.split(',')[1];
+
+      try {
+        // Use no-cors fetch to POST to Apps Script (avoids CORS preflight)
+        // We can't read the response in no-cors mode, so we optimistically
+        // wait a moment then reload the list.
+        const formData = new FormData();
+        formData.append('action',   'upload');
+        formData.append('showName', showName);
+        formData.append('fileData', base64);
+
+        bar.style.width = '70%';
+
+        await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          mode:   'no-cors',
+          body:   formData
+        });
+
+        bar.style.width = '100%';
+
+        // Give Drive a moment to process, then reload
+        await delay(1800);
+        progress.classList.remove('show');
+        bar.style.width = '0%';
+
+        setStatus('✓ Uploaded successfully! The list below will refresh.', 'success');
+        btn.textContent = 'Upload Program';
+
+        // Reset form
+        document.getElementById('showName').value = '';
+        clearFile();
+
+        // Reload list
+        await loadPrograms();
+
+      } catch (err) {
+        bar.style.width = '0%';
+        progress.classList.remove('show');
+        setStatus('Something went wrong. Please try again.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Upload Program';
+      }
+    };
+    reader.readAsDataURL(selectedFile);
+  }
+
+  function setStatus(msg, type) {
+    const el = document.getElementById('statusMsg');
+    el.textContent = msg;
+    el.className = 'status-msg' + (type ? ' show ' + type : '');
+  }
+
+  // ── LOAD PROGRAMS ────────────────────────────────────────────
+  async function loadPrograms() {
+    try {
+      const res      = await fetch(APPS_SCRIPT_URL + '?action=list');
+      const programs = await res.json();
+      renderPrograms(programs);
+    } catch (err) {
+      document.getElementById('progTbody').innerHTML =
+        '<tr><td colspan="3" style="padding:20px;color:#b52b2b;font-size:.85rem">Couldn\'t load programs.</td></tr>';
+    }
+  }
+
+  function renderPrograms(programs) {
+    const tbody = document.getElementById('progTbody');
+    if (!programs.length) {
+      tbody.innerHTML = '<tr><td colspan="3"><div class="list-empty">No programs uploaded yet.</div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = '';
+    programs.forEach(function(p, i) {
+      const tr = document.createElement('tr');
+      tr.style.animationDelay = (i * 30) + 'ms';
+      tr.innerHTML =
+        '<td><div class="pt-name">' + esc(p.showName) + '</div></td>' +
+        '<td><div class="pt-date">' + esc(p.date)     + '</div></td>' +
+        '<td>' +
+          '<div class="pt-actions">' +
+            '<button class="btn-sm btn-copy"   id="copy-' + i + '">Copy link</button>' +
+            '<button class="btn-sm btn-delete" id="del-'  + i + '">Delete</button>' +
+          '</div>' +
+        '</td>';
+      tbody.appendChild(tr);
+
+      document.getElementById('copy-' + i).addEventListener('click', function() {
+        const url  = BASE_URL + '/?show=' + encodeURIComponent(p.showName);
+        const btn  = this;
+        navigator.clipboard.writeText(url).then(function() {
+          const orig = btn.textContent;
+          btn.textContent = '✓ Copied';
+          btn.classList.add('did-copy');
+          setTimeout(function() { btn.textContent = orig; btn.classList.remove('did-copy'); }, 1800);
+        });
+      });
+
+      document.getElementById('del-' + i).addEventListener('click', function() {
+        deleteProgram(p.fileId, p.rowIndex, this);
+      });
+    });
+  }
+
+  // ── DELETE ───────────────────────────────────────────────────
+  async function deleteProgram(fileId, rowIndex, btn) {
+    if (!confirm('Delete this program? This cannot be undone.')) return;
+    btn.disabled = true;
+    btn.textContent = '…';
+    try {
+      const url = APPS_SCRIPT_URL
+        + '?action=delete'
+        + '&fileId='   + encodeURIComponent(fileId)
+        + '&rowIndex=' + encodeURIComponent(rowIndex);
+      await fetch(url, { mode: 'no-cors' });
+      await delay(1200);
+      await loadPrograms();
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Delete';
+      alert('Delete failed. Please try again.');
+    }
+  }
+
+  // ── UTILS ────────────────────────────────────────────────────
+  function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+</body>
+</html>
