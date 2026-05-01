@@ -59,7 +59,19 @@
       text-transform: uppercase;
       color: var(--ink);
       opacity: .35;
+      flex: 1;
     }
+    .staff-link {
+      font-family: var(--sans);
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .04em;
+      color: var(--ink);
+      opacity: .2;
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+    .staff-link:hover { opacity: .55; }
 
     .shell {
       display: grid;
@@ -290,7 +302,9 @@
     <path fill="#fdfdfd" d="M793.98,1032.56h175.08c0-265.62,104.07-472.75,144.89-543.77-36.94-22.44-108.08-67.8-180.07-125.33-89.22-71.3-150.67-138.03-183.89-199.48-33.22,61.45-94.66,128.18-183.89,199.48-71.99,57.54-143.13,102.89-180.07,125.33,40.82,71.02,144.89,278.15,144.89,543.77h175.22v87.69H184.18v87.69h1131.65v-87.69h-521.85v-87.69ZM793.98,487.29l228.52,51.56c-40.21,86.81-94.02,231.4-108.22,406.03h-120.3v-457.58ZM585.72,944.88c-14.2-174.63-68.01-319.22-108.22-406.03l228.78-51.62-.13,457.64h-120.43Z"/>
   </svg>
   </a>
+  <div class="header-divider"></div>
   <span class="tagline">Digital Programs</span>
+  <a href="/upload" class="staff-link">Staff ↗</a>
 </header>
 
 <!-- ══ MAIN LAYOUT ══════════════════════════════════════════ -->
@@ -502,19 +516,6 @@
 
   loadPrograms();
 </script>
-<!-- ── STAFF LINK ── -->
-<a href="/upload" style="
-  position: fixed;
-  bottom: 14px;
-  left: 18px;
-  font-family: var(--sans);
-  font-size: .68rem;
-  color: var(--ink);
-  opacity: .15;
-  letter-spacing: .04em;
-  transition: opacity .2s;
-  z-index: 50;
-" onmouseover="this.style.opacity='.5'" onmouseout="this.style.opacity='.15'">Staff ↗</a>
 
 </body>
 </html>
