@@ -465,7 +465,7 @@
     const iframe = document.getElementById('viewer');
     iframe.classList.remove('loaded');
     iframe.onload = function() { iframe.classList.add('loaded'); };
-    iframe.src = driveUrl + '&toolbar=0&navpanes=0';
+    iframe.src = driveUrl;
 
     document.getElementById('emptyState').style.display = 'none';
   }
